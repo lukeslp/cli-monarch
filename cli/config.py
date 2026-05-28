@@ -8,7 +8,7 @@ CONFIG_FILE = Path.home() / ".mm" / "config.yaml"
 DEFAULT_CONFIG = {
     "defaults": {
         "llm_provider": "anthropic",
-        "llm_model": "claude-sonnet-4-5-20250929",
+        "llm_model": "claude-opus-4-7",
         "transaction_limit": 100,
         "date_range_days": 30,
     },

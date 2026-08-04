@@ -31,3 +31,6 @@ SUGGESTIONS.md
 REPO_AUDIT.md
 *_STATUS.md
 .aider*
+
+# Keep Monarch API fixtures for unit tests
+!tests/*.json

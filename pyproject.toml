@@ -1,3 +1,67 @@
+# File purpose: PEP 621 packaging metadata for the cli-monarch PyPI distribution.
+# Primary components: build-system, project metadata, console scripts, setuptools package discovery.
+# I/O: Consumed by `python -m build` / pip; produces installable cli-monarch with `mm` and `monarch` entry points.
+
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "cli-monarch"
+version = "0.1.0"
+description = "Standalone Monarch Money CLI and Python client"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Luke Steuber", email = "luke@lukesteuber.com" }]
+keywords = [
+  "monarch-money",
+  "personal-finance",
+  "cli",
+  "budgets",
+  "transactions",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Financial and Insurance Industry",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Office/Business :: Financial",
+]
+dependencies = [
+  "aiohttp>=3.8.4",
+  "gql>=4.0",
+  "oathtool>=2.3.1",
+  "pyyaml>=6.0",
+  "cryptography>=41.0.0",
+  "click>=8.1.0",
+  "rich>=13.0.0",
+  "loguru>=0.7.0",
+  "pydantic>=2.0.0",
+  "mcp>=0.9.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/lukeslp/cli-monarch"
+Repository = "https://github.com/lukeslp/cli-monarch"
+Issues = "https://github.com/lukeslp/cli-monarch/issues"
+
+[project.scripts]
+mm = "cli.main:cli"
+monarch = "cli.main:cli"
+
+[tool.setuptools]
+packages = ["monarchmoney", "cli", "cli.commands"]
+include-package-data = true
+zip-safe = false
+
+[tool.black]
+target-version = ["py310"]
+line-length = 88

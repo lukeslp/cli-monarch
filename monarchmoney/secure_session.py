@@ -67,7 +67,7 @@ class SecureSessionManager:
             session_data: Dictionary containing session information (e.g., {"token": "..."})
         """
         # Convert to JSON and encrypt
-        json_data = json.dumps(session_data).encode('utf-8')
+        json_data = json.dumps(session_data).encode("utf-8")
         encrypted_data = self._cipher.encrypt(json_data)
 
         # Write encrypted data
@@ -94,7 +94,7 @@ class SecureSessionManager:
             encrypted_data = f.read()
 
         decrypted_data = self._cipher.decrypt(encrypted_data)
-        return json.loads(decrypted_data.decode('utf-8'))
+        return json.loads(decrypted_data.decode("utf-8"))
 
     def delete_session(self) -> None:
         """Delete the encrypted session file."""

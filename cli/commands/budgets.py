@@ -18,19 +18,21 @@ def budgets():
     pass
 
 
-@budgets.command('show')
-@click.option('--json', 'output_json', is_flag=True, help='Output as JSON')
+@budgets.command("show")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
 def show_budgets(output_json):
     """Show current budget status."""
+
     async def get_budgets():
         from monarchmoney.monarchmoney import MonarchMoney
+
         mm = MonarchMoney(use_secure_storage=True)
 
         try:
             with Progress(
                 SpinnerColumn(),
                 TextColumn("[progress.description]{task.description}"),
-                console=console
+                console=console,
             ) as progress:
                 progress.add_task("Fetching budgets...", total=None)
                 await mm.login(use_saved_session=True)
@@ -46,10 +48,10 @@ def show_budgets(output_json):
                 table.add_column("Remaining", justify="right", style="green")
                 table.add_column("Status", style="magenta")
 
-                for budget in budgets_data.get('monthlyBudgetData', []):
-                    category_name = budget.get('category', {}).get('name', 'Unknown')
-                    budgeted = budget.get('budgetAmount', 0)
-                    spent = abs(budget.get('spentAmount', 0))
+                for budget in budgets_data.get("monthlyBudgetData", []):
+                    category_name = budget.get("category", {}).get("name", "Unknown")
+                    budgeted = budget.get("budgetAmount", 0)
+                    spent = abs(budget.get("spentAmount", 0))
                     remaining = budgeted - spent
                     pct = (spent / budgeted * 100) if budgeted > 0 else 0
 
@@ -66,11 +68,13 @@ def show_budgets(output_json):
                         f"${budgeted:,.2f}",
                         f"${spent:,.2f}",
                         f"${remaining:,.2f}",
-                        status
+                        status,
                     )
 
                 console.print(table)
-                logger.info(f"Displayed {len(budgets_data.get('monthlyBudgetData', []))} budget categories")
+                logger.info(
+                    f"Displayed {len(budgets_data.get('monthlyBudgetData', []))} budget categories"
+                )
 
         except Exception as e:
             console.print(f"[bold red]Error:[/bold red] {str(e)}")
@@ -80,20 +84,22 @@ def show_budgets(output_json):
     asyncio.run(get_budgets())
 
 
-@budgets.command('summary')
+@budgets.command("summary")
 def budget_summary():
     """Show overall budget summary."""
+
     async def get_summary():
         from monarchmoney.monarchmoney import MonarchMoney
+
         mm = MonarchMoney(use_secure_storage=True)
 
         try:
             await mm.login(use_saved_session=True)
             cashflow = await mm.get_cashflow_summary()
 
-            summary = cashflow.get('summary', {})
-            total_income = summary.get('sumIncome', 0)
-            total_expenses = abs(summary.get('sumExpense', 0))
+            summary = cashflow.get("summary", {})
+            total_income = summary.get("sumIncome", 0)
+            total_expenses = abs(summary.get("sumExpense", 0))
             savings = total_income - total_expenses
             savings_rate = (savings / total_income * 100) if total_income > 0 else 0
 
@@ -103,7 +109,9 @@ def budget_summary():
             console.print(f"  [bold]Net:        [cyan]${savings:,.2f}[/cyan][/bold]")
             console.print(f"  Savings Rate: [magenta]{savings_rate:.1f}%[/magenta]\n")
 
-            logger.info(f"Budget summary: Income ${total_income:.2f}, Expenses ${total_expenses:.2f}")
+            logger.info(
+                f"Budget summary: Income ${total_income:.2f}, Expenses ${total_expenses:.2f}"
+            )
 
         except Exception as e:
             console.print(f"[bold red]Error:[/bold red] {str(e)}")

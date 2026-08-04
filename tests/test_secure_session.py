@@ -90,7 +90,7 @@ class TestSecureSessionManager:
         assert b"secret_token_xyz" not in encrypted_content
 
         # And should be different from JSON
-        json_bytes = json.dumps(session_data).encode('utf-8')
+        json_bytes = json.dumps(session_data).encode("utf-8")
         assert encrypted_content != json_bytes
 
     def test_multiple_save_loads(self):
@@ -121,12 +121,9 @@ class TestSecureSessionManager:
             "user": {
                 "id": "123",
                 "email": "test@example.com",
-                "preferences": {
-                    "theme": "dark",
-                    "notifications": True
-                }
+                "preferences": {"theme": "dark", "notifications": True},
             },
-            "expires_at": "2026-12-31T23:59:59Z"
+            "expires_at": "2026-12-31T23:59:59Z",
         }
 
         self.manager.save_session(session_data)

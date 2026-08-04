@@ -1,4 +1,5 @@
 """Configuration management for Monarch Money CLI."""
+
 import yaml
 from pathlib import Path
 from typing import Dict, Any, Optional
@@ -24,8 +25,9 @@ DEFAULT_CONFIG = {
     "aliases": {
         # User can add custom command aliases here
         # Example: "spending": "insights ask 'Show my spending by category'"
-    }
+    },
 }
+
 
 def load_config() -> Dict[str, Any]:
     """Load config from file or return defaults."""
@@ -50,11 +52,13 @@ def load_config() -> Dict[str, Any]:
         # If config file is corrupt, return defaults
         return DEFAULT_CONFIG
 
+
 def save_config(config: Dict[str, Any]) -> None:
     """Save config to file."""
     CONFIG_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with open(CONFIG_FILE, 'w') as f:
+    with open(CONFIG_FILE, "w") as f:
         yaml.safe_dump(config, f, default_flow_style=False, sort_keys=False)
+
 
 def get_default(key: str, default: Optional[Any] = None) -> Any:
     """Get a default value from config.
@@ -67,7 +71,7 @@ def get_default(key: str, default: Optional[Any] = None) -> Any:
         Config value or default
     """
     config = load_config()
-    keys = key.split('.')
+    keys = key.split(".")
     value = config
 
     for k in keys:
@@ -78,6 +82,7 @@ def get_default(key: str, default: Optional[Any] = None) -> Any:
 
     return value if value is not None else default
 
+
 def set_config_value(key: str, value: Any) -> None:
     """Set a config value.
 
@@ -86,7 +91,7 @@ def set_config_value(key: str, value: Any) -> None:
         value: Value to set
     """
     config = load_config()
-    keys = key.split('.')
+    keys = key.split(".")
 
     # Navigate to the parent dict
     target = config

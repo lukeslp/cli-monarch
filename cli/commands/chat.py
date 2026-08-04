@@ -10,19 +10,24 @@ from rich.markdown import Markdown
 from rich.prompt import Prompt
 
 # Add shared library to path
-sys.path.insert(0, os.path.expanduser('~/shared'))
+sys.path.insert(0, os.path.expanduser("~/shared"))
 
-from llm_providers import get_provider, Message
+try:
+    from llm_providers import get_provider, Message
+except ImportError:  # pragma: no cover - optional host-local dependency
+    get_provider = None
+    Message = None
 from monarchmoney.logger import logger
 
 console = Console()
 
 
 @click.command()
-@click.option('--provider', '-p', default='anthropic', help='LLM provider')
-@click.option('--model', '-m', help='Specific model to use')
+@click.option("--provider", "-p", default="anthropic", help="LLM provider")
+@click.option("--model", "-m", help="Specific model to use")
 def chat(provider, model):
     """Start an interactive chat session with financial context."""
+
     async def run_chat():
         from monarchmoney.monarchmoney import MonarchMoney
 
@@ -49,28 +54,36 @@ def chat(provider, model):
 
             # Build context
             from cli.commands.insights import _build_financial_context
-            financial_context = _build_financial_context(accounts, transactions, budgets, cashflow)
+
+            financial_context = _build_financial_context(
+                accounts, transactions, budgets, cashflow
+            )
 
             # Initialize LLM
             llm = get_provider(provider, model=model)
 
             # Chat loop
-            console.print(Panel(
-                "[bold green]Financial Chat Assistant[/bold green]\n\n"
-                "Ask me anything about your finances. Type 'exit' or 'quit' to end the session.",
-                border_style="green"
-            ))
+            console.print(
+                Panel(
+                    "[bold green]Financial Chat Assistant[/bold green]\n\n"
+                    "Ask me anything about your finances. Type 'exit' or 'quit' to end the session.",
+                    border_style="green",
+                )
+            )
 
             conversation_history = [
                 Message(role="system", content=CHAT_SYSTEM_PROMPT),
-                Message(role="system", content=f"Current Financial Data:\n{financial_context}")
+                Message(
+                    role="system",
+                    content=f"Current Financial Data:\n{financial_context}",
+                ),
             ]
 
             while True:
                 # Get user input
                 user_input = Prompt.ask("\n[bold cyan]You[/bold cyan]")
 
-                if user_input.lower() in ['exit', 'quit', 'bye']:
+                if user_input.lower() in ["exit", "quit", "bye"]:
                     console.print("[dim]Goodbye![/dim]")
                     break
 
@@ -82,16 +95,22 @@ def chat(provider, model):
                 response = llm.complete(conversation_history, max_tokens=800)
 
                 # Display response
-                console.print(Panel(
-                    Markdown(response.content),
-                    title="[bold green]Assistant[/bold green]",
-                    border_style="green"
-                ))
+                console.print(
+                    Panel(
+                        Markdown(response.content),
+                        title="[bold green]Assistant[/bold green]",
+                        border_style="green",
+                    )
+                )
 
                 # Add to history
-                conversation_history.append(Message(role="assistant", content=response.content))
+                conversation_history.append(
+                    Message(role="assistant", content=response.content)
+                )
 
-                logger.debug(f"Chat exchange: User: '{user_input}', Assistant: '{response.content[:100]}...'")
+                logger.debug(
+                    f"Chat exchange: User: '{user_input}', Assistant: '{response.content[:100]}...'"
+                )
 
         except KeyboardInterrupt:
             console.print("\n[dim]Chat session interrupted.[/dim]")

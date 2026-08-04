@@ -12,6 +12,12 @@ This repository is a standalone extraction of the local Monarch tooling previous
 
 ## Installation
 
+### From PyPI (once published)
+
+```bash
+pip install cli-monarch
+```
+
 ### From source
 
 ```bash

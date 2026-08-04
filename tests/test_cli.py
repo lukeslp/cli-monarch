@@ -18,27 +18,27 @@ class TestCLIBasics:
 
     def test_cli_help(self):
         """Test that CLI help displays correctly."""
-        result = self.runner.invoke(cli, ['--help'])
+        result = self.runner.invoke(cli, ["--help"])
         assert result.exit_code == 0
-        assert 'Monarch Money CLI' in result.output
-        assert 'accounts' in result.output
-        assert 'transactions' in result.output
-        assert 'budgets' in result.output
-        assert 'insights' in result.output
-        assert 'chat' in result.output
+        assert "Monarch Money CLI" in result.output
+        assert "accounts" in result.output
+        assert "transactions" in result.output
+        assert "budgets" in result.output
+        assert "insights" in result.output
+        assert "chat" in result.output
 
     def test_cli_version(self):
         """Test version flag."""
-        result = self.runner.invoke(cli, ['--version'])
+        result = self.runner.invoke(cli, ["--version"])
         assert result.exit_code == 0
-        assert '1.0.0' in result.output
+        assert "1.0.0" in result.output
 
     def test_verbose_flag(self):
         """Test verbose flag is recognized."""
-        result = self.runner.invoke(cli, ['--verbose', '--help'])
+        result = self.runner.invoke(cli, ["--verbose", "--help"])
         assert result.exit_code == 0
         # Verbose mode should be enabled but still show help
-        assert 'Monarch Money CLI' in result.output
+        assert "Monarch Money CLI" in result.output
 
 
 class TestAccountsCommand:
@@ -50,9 +50,9 @@ class TestAccountsCommand:
 
     def test_accounts_help(self):
         """Test accounts help displays."""
-        result = self.runner.invoke(cli, ['accounts', '--help'])
+        result = self.runner.invoke(cli, ["accounts", "--help"])
         assert result.exit_code == 0
-        assert 'List all accounts' in result.output
+        assert "List all accounts" in result.output
 
 
 class TestTransactionsCommand:
@@ -64,24 +64,24 @@ class TestTransactionsCommand:
 
     def test_transactions_help(self):
         """Test transactions help displays."""
-        result = self.runner.invoke(cli, ['transactions', '--help'])
+        result = self.runner.invoke(cli, ["transactions", "--help"])
         assert result.exit_code == 0
-        assert 'Manage and view transactions' in result.output
+        assert "Manage and view transactions" in result.output
 
     def test_transactions_list_help(self):
         """Test transactions list help."""
-        result = self.runner.invoke(cli, ['transactions', 'list', '--help'])
+        result = self.runner.invoke(cli, ["transactions", "list", "--help"])
         assert result.exit_code == 0
-        assert 'List recent transactions' in result.output
-        assert '--start' in result.output
-        assert '--end' in result.output
-        assert '--limit' in result.output
+        assert "List recent transactions" in result.output
+        assert "--start" in result.output
+        assert "--end" in result.output
+        assert "--limit" in result.output
 
     def test_transactions_search_help(self):
         """Test transactions search help."""
-        result = self.runner.invoke(cli, ['transactions', 'search', '--help'])
+        result = self.runner.invoke(cli, ["transactions", "search", "--help"])
         assert result.exit_code == 0
-        assert 'Search transactions' in result.output
+        assert "Search transactions" in result.output
 
 
 class TestBudgetsCommand:
@@ -93,21 +93,21 @@ class TestBudgetsCommand:
 
     def test_budgets_help(self):
         """Test budgets help displays."""
-        result = self.runner.invoke(cli, ['budgets', '--help'])
+        result = self.runner.invoke(cli, ["budgets", "--help"])
         assert result.exit_code == 0
-        assert 'Manage budgets' in result.output
+        assert "Manage budgets" in result.output
 
     def test_budgets_show_help(self):
         """Test budgets show help."""
-        result = self.runner.invoke(cli, ['budgets', 'show', '--help'])
+        result = self.runner.invoke(cli, ["budgets", "show", "--help"])
         assert result.exit_code == 0
-        assert 'Show current budget status' in result.output
+        assert "Show current budget status" in result.output
 
     def test_budgets_summary_help(self):
         """Test budgets summary help."""
-        result = self.runner.invoke(cli, ['budgets', 'summary', '--help'])
+        result = self.runner.invoke(cli, ["budgets", "summary", "--help"])
         assert result.exit_code == 0
-        assert 'overall budget summary' in result.output
+        assert "overall budget summary" in result.output
 
 
 class TestInsightsCommand:
@@ -119,23 +119,23 @@ class TestInsightsCommand:
 
     def test_insights_help(self):
         """Test insights help displays."""
-        result = self.runner.invoke(cli, ['insights', '--help'])
+        result = self.runner.invoke(cli, ["insights", "--help"])
         assert result.exit_code == 0
-        assert 'LLM-powered financial insights' in result.output
+        assert "LLM-powered financial insights" in result.output
 
     def test_insights_ask_help(self):
         """Test insights ask help."""
-        result = self.runner.invoke(cli, ['insights', 'ask', '--help'])
+        result = self.runner.invoke(cli, ["insights", "ask", "--help"])
         assert result.exit_code == 0
-        assert 'natural language question' in result.output
-        assert '--provider' in result.output
-        assert '--model' in result.output
+        assert "natural language question" in result.output
+        assert "--provider" in result.output
+        assert "--model" in result.output
 
     def test_insights_analyze_help(self):
         """Test insights analyze help."""
-        result = self.runner.invoke(cli, ['insights', 'analyze', '--help'])
+        result = self.runner.invoke(cli, ["insights", "analyze", "--help"])
         assert result.exit_code == 0
-        assert 'comprehensive spending analysis' in result.output
+        assert "comprehensive spending analysis" in result.output
 
 
 class TestChatCommand:
@@ -147,11 +147,11 @@ class TestChatCommand:
 
     def test_chat_help(self):
         """Test chat help displays."""
-        result = self.runner.invoke(cli, ['chat', '--help'])
+        result = self.runner.invoke(cli, ["chat", "--help"])
         assert result.exit_code == 0
-        assert 'interactive chat session' in result.output
-        assert '--provider' in result.output
-        assert '--model' in result.output
+        assert "interactive chat session" in result.output
+        assert "--provider" in result.output
+        assert "--model" in result.output
 
 
 class TestLoginCommand:
@@ -163,9 +163,9 @@ class TestLoginCommand:
 
     def test_login_help(self):
         """Test login help displays."""
-        result = self.runner.invoke(cli, ['login', '--help'])
+        result = self.runner.invoke(cli, ["login", "--help"])
         assert result.exit_code == 0
-        assert 'Interactive login' in result.output
+        assert "Interactive login" in result.output
 
 
 # Integration tests would require mocking the MonarchMoney API

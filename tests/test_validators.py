@@ -23,8 +23,7 @@ class TestDateRangeValidator:
     def test_valid_date_range(self):
         """Test valid date range."""
         validator = DateRangeValidator(
-            start_date=date(2026, 1, 1),
-            end_date=date(2026, 1, 31)
+            start_date=date(2026, 1, 1), end_date=date(2026, 1, 31)
         )
         assert validator.start_date == date(2026, 1, 1)
         assert validator.end_date == date(2026, 1, 31)
@@ -32,11 +31,8 @@ class TestDateRangeValidator:
     def test_invalid_date_range(self):
         """Test that end_date before start_date raises error."""
         with pytest.raises(ValidationError) as exc_info:
-            DateRangeValidator(
-                start_date=date(2026, 1, 31),
-                end_date=date(2026, 1, 1)
-            )
-        assert 'end_date must be after start_date' in str(exc_info.value)
+            DateRangeValidator(start_date=date(2026, 1, 31), end_date=date(2026, 1, 1))
+        assert "end_date must be after start_date" in str(exc_info.value)
 
 
 class TestTransactionFilterValidator:
@@ -73,7 +69,7 @@ class TestTransactionFilterValidator:
     def test_search_too_long(self):
         """Test search string exceeding max length."""
         with pytest.raises(ValidationError):
-            TransactionFilterValidator(search='x' * 501)
+            TransactionFilterValidator(search="x" * 501)
 
 
 class TestAmountValidator:
@@ -98,7 +94,7 @@ class TestAmountValidator:
         """Test amount with >2 decimal places raises error."""
         with pytest.raises(ValidationError) as exc_info:
             AmountValidator(amount=123.456)
-        assert 'at most 2 decimal places' in str(exc_info.value)
+        assert "at most 2 decimal places" in str(exc_info.value)
 
 
 class TestAccountIDValidator:
@@ -123,7 +119,7 @@ class TestAccountIDValidator:
         """Test whitespace-only ID raises error."""
         with pytest.raises(ValidationError) as exc_info:
             AccountIDValidator(account_id="   ")
-        assert 'cannot be empty' in str(exc_info.value)
+        assert "cannot be empty" in str(exc_info.value)
 
 
 class TestValidateDateString:
@@ -138,8 +134,8 @@ class TestValidateDateString:
         """Test invalid date format raises error."""
         with pytest.raises(ValueError) as exc_info:
             validate_date_string("01/05/2026")
-        assert 'Invalid date format' in str(exc_info.value)
-        assert 'Expected YYYY-MM-DD' in str(exc_info.value)
+        assert "Invalid date format" in str(exc_info.value)
+        assert "Expected YYYY-MM-DD" in str(exc_info.value)
 
     def test_invalid_date_values(self):
         """Test invalid date values raise error."""
@@ -164,13 +160,13 @@ class TestValidateLimit:
         """Test limit exceeding maximum."""
         with pytest.raises(ValueError) as exc_info:
             validate_limit(2000, max_limit=1000)
-        assert 'cannot exceed 1000' in str(exc_info.value)
+        assert "cannot exceed 1000" in str(exc_info.value)
 
     def test_limit_below_min(self):
         """Test limit below minimum."""
         with pytest.raises(ValueError) as exc_info:
             validate_limit(0)
-        assert 'must be at least 1' in str(exc_info.value)
+        assert "must be at least 1" in str(exc_info.value)
 
     def test_custom_max_limit(self):
         """Test custom max limit."""

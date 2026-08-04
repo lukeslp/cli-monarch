@@ -20,11 +20,11 @@ def transactions():
     pass
 
 
-@transactions.command('list')
-@click.option('--start', '-s', help='Start date (YYYY-MM-DD)')
-@click.option('--end', '-e', help='End date (YYYY-MM-DD)')
-@click.option('--limit', '-l', default=50, help='Number of transactions (max 500)')
-@click.option('--json', 'output_json', is_flag=True, help='Output as JSON')
+@transactions.command("list")
+@click.option("--start", "-s", help="Start date (YYYY-MM-DD)")
+@click.option("--end", "-e", help="End date (YYYY-MM-DD)")
+@click.option("--limit", "-l", default=50, help="Number of transactions (max 500)")
+@click.option("--json", "output_json", is_flag=True, help="Output as JSON")
 def list_transactions(start, end, limit, output_json):
     """List recent transactions."""
     # Validate inputs
@@ -32,7 +32,7 @@ def list_transactions(start, end, limit, output_json):
         if start:
             start_date = validate_date_string(start)
         else:
-            start_date = (date.today() - timedelta(days=30))
+            start_date = date.today() - timedelta(days=30)
 
         if end:
             end_date = validate_date_string(end)
@@ -47,17 +47,18 @@ def list_transactions(start, end, limit, output_json):
 
     async def get_transactions():
         from monarchmoney.monarchmoney import MonarchMoney
+
         mm = MonarchMoney(use_secure_storage=True)
 
         try:
             await mm.login(use_saved_session=True)
 
             # Apply date filters if provided
-            filter_params = {'limit': limit}
+            filter_params = {"limit": limit}
             if start:
-                filter_params['start_date'] = start_date.isoformat()
+                filter_params["start_date"] = start_date.isoformat()
             if end:
-                filter_params['end_date'] = end_date.isoformat()
+                filter_params["end_date"] = end_date.isoformat()
 
             transactions = await mm.get_transactions(**filter_params)
 
@@ -70,16 +71,20 @@ def list_transactions(start, end, limit, output_json):
                 table.add_column("Category", style="magenta")
                 table.add_column("Amount", justify="right", style="green")
 
-                for txn in transactions.get('allTransactions', {}).get('results', [])[:limit]:
-                    amount = txn.get('amount', 0)
+                for txn in transactions.get("allTransactions", {}).get("results", [])[
+                    :limit
+                ]:
+                    amount = txn.get("amount", 0)
                     amount_str = f"${abs(amount):,.2f}"
                     amount_style = "red" if amount < 0 else "green"
 
                     table.add_row(
-                        txn.get('date', 'N/A'),
-                        txn.get('merchant', {}).get('name', txn.get('notes', 'N/A'))[:50],
-                        txn.get('category', {}).get('name', 'Uncategorized'),
-                        f"[{amount_style}]{amount_str}[/{amount_style}]"
+                        txn.get("date", "N/A"),
+                        txn.get("merchant", {}).get("name", txn.get("notes", "N/A"))[
+                            :50
+                        ],
+                        txn.get("category", {}).get("name", "Uncategorized"),
+                        f"[{amount_style}]{amount_str}[/{amount_style}]",
                     )
 
                 console.print(table)
@@ -93,9 +98,9 @@ def list_transactions(start, end, limit, output_json):
     asyncio.run(get_transactions())
 
 
-@transactions.command('search')
-@click.argument('query')
-@click.option('--limit', '-l', default=20, help='Number of results')
+@transactions.command("search")
+@click.argument("query")
+@click.option("--limit", "-l", default=20, help="Number of results")
 def search_transactions(query, limit):
     """Search transactions by description or merchant."""
     try:
@@ -106,6 +111,7 @@ def search_transactions(query, limit):
 
     async def do_search():
         from monarchmoney.monarchmoney import MonarchMoney
+
         mm = MonarchMoney(use_secure_storage=True)
 
         try:
@@ -114,16 +120,18 @@ def search_transactions(query, limit):
 
             # Filter transactions by query
             results = []
-            for txn in transactions.get('allTransactions', {}).get('results', []):
-                merchant = txn.get('merchant', {}).get('name', '')
-                notes = txn.get('notes', '')
+            for txn in transactions.get("allTransactions", {}).get("results", []):
+                merchant = txn.get("merchant", {}).get("name", "")
+                notes = txn.get("notes", "")
                 if query.lower() in merchant.lower() or query.lower() in notes.lower():
                     results.append(txn)
                     if len(results) >= limit:
                         break
 
             if not results:
-                console.print(f"[yellow]No transactions found matching '{query}'[/yellow]")
+                console.print(
+                    f"[yellow]No transactions found matching '{query}'[/yellow]"
+                )
                 return
 
             table = Table(title=f"Search Results for '{query}'")
@@ -132,14 +140,14 @@ def search_transactions(query, limit):
             table.add_column("Amount", justify="right", style="green")
 
             for txn in results:
-                amount = txn.get('amount', 0)
+                amount = txn.get("amount", 0)
                 amount_str = f"${abs(amount):,.2f}"
                 amount_style = "red" if amount < 0 else "green"
 
                 table.add_row(
-                    txn.get('date', 'N/A'),
-                    txn.get('merchant', {}).get('name', txn.get('notes', 'N/A')),
-                    f"[{amount_style}]{amount_str}[/{amount_style}]"
+                    txn.get("date", "N/A"),
+                    txn.get("merchant", {}).get("name", txn.get("notes", "N/A")),
+                    f"[{amount_style}]{amount_str}[/{amount_style}]",
                 )
 
             console.print(table)

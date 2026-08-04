@@ -12,7 +12,11 @@ from rich.prompt import Prompt
 # Add shared library to path
 sys.path.insert(0, os.path.expanduser("~/shared"))
 
-from llm_providers import get_provider, Message
+try:
+    from llm_providers import get_provider, Message
+except ImportError:  # pragma: no cover - optional host-local dependency
+    get_provider = None
+    Message = None
 from monarchmoney.logger import logger
 
 console = Console()
